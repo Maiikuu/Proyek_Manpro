@@ -22,68 +22,42 @@
 # plt.show()
 
 
-from flask import Flask, request, render_template
 import pandas as pd
-from geopy.geocoders import Nominatim
 from sklearn.cluster import DBSCAN
+from sklearn.metrics.pairwise import haversine_distances
+from math import radians
 import matplotlib.pyplot as plt
-from io import BytesIO
-import base64
 
-app = Flask(__name__)
+data = pd.read_csv('new_januari.csv')
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        # Check if file is uploaded successfully
-        if 'file' not in request.files:
-            return "No file part"
-        file = request.files['file']
-        if file.filename == '':
-            return "No selected file"
-        
-        # Read the uploaded CSV file
-        df = pd.read_csv(file)
-        
-        # Create approximate locations using 'WILAYAH', 'KECAMATAN', and 'NAMA FASKES'
-        df['location'] = df['WILAYAH'] + ', ' + df['KECAMATAN'] + ', ' + df['NAMA FASKES (Rumah Sakit dan Puskesmas)']
-        
-        # Drop duplicate locations to avoid redundancy
-        df = df.drop_duplicates(subset=['location'])
-        
-        # Geocode the approximate locations
-        geolocator = Nominatim(user_agent="geoapiExercises")
-        df['location'] = df['location'].apply(lambda x: geolocator.geocode(x))
-        
-        # Drop rows with missing geocoding results
-        df = df.dropna(subset=['location'])
-        
-        # Extract latitude and longitude from geocoding results
-        df['latitude'] = df['location'].apply(lambda x: x.latitude)
-        df['longitude'] = df['location'].apply(lambda x: x.longitude)
-        
-        # DBSCAN clustering
-        X = df[['latitude', 'longitude']].values
-        dbscan = DBSCAN(eps=0.1, min_samples=10)
-        labels = dbscan.fit_predict(X)
-        
-        # Visualization
-        plt.scatter(X[:, 0], X[:, 1], c=labels, cmap='viridis')
-        plt.title('DBSCAN Clustering')
-        plt.xlabel('Latitude')
-        plt.ylabel('Longitude')
-        
-        # Convert plot to base64 image
-        img = BytesIO()
-        plt.savefig(img, format='png')
-        img.seek(0)
-        plot_url = base64.b64encode(img.getvalue()).decode()
-        plt.close()
-        
-        # Render template with plot
-        return render_template('result.html', plot_url=plot_url)
-    
-    return render_template('index.html')
+# Drop rows with missing values
+data.dropna(subset=['latitude', 'longitude'], inplace=True)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# Convert latitude and longitude to radians
+data['latitude'] = data['latitude'].apply(radians)
+data['longitude'] = data['longitude'].apply(radians)
+
+# Define epsilon and minimum samples for DBSCAN
+epsilon = 1.5  # Adjust as needed
+min_samples = 2  # Adjust as needed
+
+# Define haversine function to calculate distance
+def haversine(point1, point2):
+    return haversine_distances([point1, point2])[0][1] * 6371000  # Earth radius in meters
+
+# Define a function to perform DBSCAN clustering
+def dbscan_clustering(data, epsilon, min_samples):
+    dbscan = DBSCAN(eps=epsilon, min_samples=min_samples, algorithm='ball_tree', metric=haversine)
+    clusters = dbscan.fit_predict(data[['latitude', 'longitude']])
+    return clusters
+
+# Perform clustering
+data['cluster'] = dbscan_clustering(data, epsilon, min_samples)
+
+# Plot clusters
+plt.scatter(data['longitude'], data['latitude'], c=data['cluster'], cmap='viridis', s=20)
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+plt.title('DBSCAN Clustering')
+plt.colorbar(label='Cluster')
+plt.show()
