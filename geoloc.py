@@ -1,23 +1,65 @@
 import pandas as pd
-from geopy.geocoders import Nominatim
+import geopandas as gpd
+from shapely.geometry import Point
+from sklearn.cluster import KMeans
+from math import cos, sin, radians
+import folium
+import matplotlib.pyplot as plt
+import streamlit as st
+from streamlit_folium import folium_static
 
-# Assuming your data is stored in a CSV file named 'healthcare_data.csv'
-data = pd.read_csv('januari.csv')
+# Load data from CSV
+data = pd.read_csv('new_januari.csv')
 
-# Filter the data for 'Puskesmas Asemrowo' in 'Surabaya Barat'
-location_data = data[(data['WILAYAH'] == 'Surabaya Barat') & (data['NAMA FASKES (Rumah Sakit dan Puskesmas)'] == 'Puskesmas Asemrowo')]
+# Drop rows with missing values
+data.dropna(subset=['latitude', 'longitude'], inplace=True)
 
-# Get the unique address for the location
-location_address = location_data['WILAYAH'].iloc[0] + ', ' + location_data['KECAMATAN'].iloc[0] + ', ' + location_data['NAMA_FASKES_(Rumah Sakit dan Puskesmas)'].iloc[0]
+# Create a GeoDataFrame
+gdf = gpd.GeoDataFrame(data, geometry=gpd.points_from_xy(data.longitude, data.latitude))
 
-# Use geocoding to find the coordinates of the location
-geolocator = Nominatim(user_agent="geoapiExercises")
-location = geolocator.geocode(location_address)
+# Convert latitude and longitude to Cartesian coordinates
+def lat_lon_to_cartesian(lat, lon):
+    R = 6371000  # Earth radius in meters
+    lat_rad = radians(lat)
+    lon_rad = radians(lon)
+    x = R * cos(lat_rad) * cos(lon_rad)
+    y = R * cos(lat_rad) * sin(lon_rad)
+    return x, y
 
-if location:
-    print("Latitude and Longitude of the location:")
-    print((location.latitude, location.longitude))
-else:
-    print("Location not found.")
+gdf['x'], gdf['y'] = zip(*gdf.apply(lambda row: lat_lon_to_cartesian(row['latitude'], row['longitude']), axis=1))
 
-#masi error
+# Define the number of clusters for K-Means
+n_clusters = 3  # Adjust as needed
+
+# Perform K-Means clustering
+kmeans = KMeans(n_clusters=n_clusters)
+gdf['cluster'] = kmeans.fit_predict(gdf[['x', 'y']])
+
+# Plot the clusters using Matplotlib
+fig, ax = plt.subplots(figsize=(10, 10))
+gdf.plot(ax=ax, column='cluster', legend=True, cmap='tab20', markersize=5)
+plt.title('K-Means Clustering of Geospatial Data')
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+
+# Display the plot in Streamlit
+st.pyplot(fig)
+
+# Create a map using Folium
+map_clusters = folium.Map(location=[gdf['latitude'].mean(), gdf['longitude'].mean()], zoom_start=10)
+
+# Add markers for each data point
+for _, row in gdf.iterrows():
+    folium.CircleMarker(
+        location=[row['latitude'], row['longitude']],
+        radius=5,
+        color='blue' if row['cluster'] == -1 else 'red',
+        fill=True,
+        fill_color='blue' if row['cluster'] == -1 else 'red'
+    ).add_to(map_clusters)
+
+# Display the map in Streamlit
+folium_static(map_clusters)
+
+
+#ga ngerti streamlit

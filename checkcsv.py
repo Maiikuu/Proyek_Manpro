@@ -56,22 +56,18 @@ from math import radians
 import folium
 import matplotlib.pyplot as plt
 
-# Load data from CSV
 data = pd.read_csv('new_januari.csv')
 
-# Drop rows with missing values
 data.dropna(subset=['latitude', 'longitude'], inplace=True)
 
-# Create a GeoDataFrame
 gdf = gpd.GeoDataFrame(data, geometry=gpd.points_from_xy(data.longitude, data.latitude))
 
-# Convert latitude and longitude to radians
 gdf['latitude_rad'] = gdf['latitude'].apply(radians)
 gdf['longitude_rad'] = gdf['longitude'].apply(radians)
 
-# Define epsilon and minimum samples for DBSCAN
-epsilon = 1.5 / 6371000  # Convert meters to radians by dividing by Earth radius
-min_samples = 2  # Adjust as needed
+
+epsilon = 2 / 6371000  # Convert meters to radians by dividing by Earth radius
+min_samples = 1  # Adjust as needed
 
 # Define haversine function to calculate distance
 def haversine(point1, point2):
@@ -97,7 +93,6 @@ plt.show()
 # Create a map using Folium
 map_clusters = folium.Map(location=[gdf['latitude'].mean(), gdf['longitude'].mean()], zoom_start=10)
 
-# Add markers for each data point
 for _, row in gdf.iterrows():
     folium.CircleMarker(
         location=[row['latitude'], row['longitude']],
@@ -107,6 +102,5 @@ for _, row in gdf.iterrows():
         fill_color='blue' if row['cluster'] == -1 else 'red'
     ).add_to(map_clusters)
 
-# Save and display the map
 map_clusters.save('map.html')
-map_clusters  # This will display the map in Jupyter notebook environments
+# map_clusters
