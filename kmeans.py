@@ -57,3 +57,41 @@ for _, row in gdf.iterrows():
 # Save and display the map
 map_clusters.save('kmean.html')
 map_clusters  # This will display the map in Jupyter notebook environments
+
+##PAKE PLOTLY
+# import plotly.express as px
+
+# # Load data from CSV
+# data = pd.read_csv('new_januari.csv')
+
+# # Drop rows with missing values
+# data.dropna(subset=['latitude', 'longitude'], inplace=True)
+
+# # Create a GeoDataFrame
+# gdf = gpd.GeoDataFrame(data, geometry=gpd.points_from_xy(data.longitude, data.latitude))
+
+# # Convert latitude and longitude to Cartesian coordinates
+# def lat_lon_to_cartesian(lat, lon):
+#     R = 6371000  # Earth radius in meters
+#     lat_rad = radians(lat)
+#     lon_rad = radians(lon)
+#     x = R * cos(lat_rad) * cos(lon_rad)
+#     y = R * cos(lat_rad) * sin(lon_rad)
+#     return x, y
+
+# gdf['x'], gdf['y'] = zip(*gdf.apply(lambda row: lat_lon_to_cartesian(row['latitude'], row['longitude']), axis=1))
+
+# # Define the number of clusters for K-Means
+# n_clusters = 3  # Adjust as needed
+
+# # Perform K-Means clustering
+# kmeans = KMeans(n_clusters=n_clusters)
+# gdf['cluster'] = kmeans.fit_predict(gdf[['x', 'y']])
+
+# # Create an interactive map using Plotly
+# fig = px.scatter_mapbox(gdf, lat='latitude', lon='longitude', color='cluster',
+#                         mapbox_style='carto-positron', zoom=10, height=600, width=800)
+
+# fig.update_layout(mapbox=dict(center=dict(lat=gdf['latitude'].mean(), lon=gdf['longitude'].mean())))
+# fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+# fig.show()
