@@ -1,7 +1,8 @@
 body{
-    background: rgba(67, 67, 67, 0.385);
+    background: rgba(181, 181, 181, 0.385);
     margin: 0;
     padding: 0;
+    font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
 }
 
 header{
@@ -9,7 +10,6 @@ header{
     padding: 40px;
     height: 30px;
     padding-left: 20px;
-    font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
 }
 
 header a{
@@ -64,63 +64,68 @@ div{
     margin-left: 11%;
 }
 
-section .gambar1{
+section .banner{
     background-color: gray;
     background-image: url("assets/image\ 15.png");
-    background-size: 1200px;
+    background-size: 1300px;
     background-repeat: no-repeat;
     height: 120px;
     text-indent: -999999px;
-    width: 1200px;
-    margin-left: 20px;
-    padding-left: 220px;
-    padding-right: 250px;
+    width: 1300px;
+    align-items: center;
+    margin-left: 100px;
 }
 section .gambar2 {
     background-image: url("assets/image\ 18.png");
-    background-size: 400px;
-    height: 200px;
-    width: 400px;
+    background-size: 500px;
+    background-repeat: no-repeat;
+    height: 250px;
+    width: 500px;
     margin-right: 250px;
 }
 section .gambar3 {
     background-image: url("assets/image\ 19.png");
     background-size: 500px;
-    height: 350px;
+    background-repeat: no-repeat;
+    height: 400px;
     width: 500px;
     margin-right: 250px;
 }
 section .gambar4 {
-    background-image: url("assets/image\ 18.png");
-    background-size: 400px;
+    background-image: url("assets/image\ 22.png");
+    background-size: 800px;
+    background-repeat: no-repeat;
     height: 200px;
-    width: 400px;
-    margin-right: 250px;
+    width: 800px;
+    margin: 0;
 }
 section .gambar5 {
-    background-image: url("assets/");
-    background-size: 400px;
+    background-image: url("assets/image\ 23.png");
+    background-size: 800px;
+    background-repeat: no-repeat;
     height: 200px;
-    width: 400px;
-    margin-right: 250px;
+    width: 800px;
+    margin: 0;
 }
+
 section .gambar6 {
     background-image: url("assets/image\ 16.png");
-    background-size: 950px;
+    background-size: 850px;
+    background-repeat: no-repeat;
     height: 120px;
-    width: 950px;
-    margin-left: -10px;
-    margin-top: -10px;
+    width: 850px;
+    margin: 0;
 }
 section .gambar7 {
     background-image: url("assets/image\ 17.png");
-    background-size: 950px;
+    background-size: 850px;
+    background-repeat: no-repeat;
     height: 630px;
-    width: 950px;
+    width: 850px;
     margin: 0px;
-    margin-left: -10px;
-    margin-top: -20px;
+    
 }
+
 .item {
     width: 150px;
     height: 150px;
@@ -133,22 +138,18 @@ section .gambar7 {
 .container {
     display: flex;
     justify-content: flex-start;
+    margin: 0;
 }
 .cont1 {
     height: 800px;
     flex: 1;
-    margin-left: -180px;
+    margin: 0px;
 }
 .cont2 {
     height:  800px;
-    width: 250px;
+    width: 260px;
     padding-right: 300px;
-    margin-left: -10px;
-    margin-right: 50px;
-}
-.banner img {   
-    width: 100%;
-    height: 100px;
+    margin: 0;
 }
 
 .login-form {
@@ -224,6 +225,42 @@ section .gambar7 {
 
 .login-container button:hover {
     background-color: #45a049;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+
+}
+
+caption {
+    text-align: left;
+    padding: 15px;
+    font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: larger;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 15px;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+.lokasi{
+    padding-bottom: 100px;
+    padding-right: 400px;
+}
+
+.email {
+    padding-bottom: 100px;
+    padding-right: 300px;
+}
+
+.table {
+    background-color: #f2f2f2;
 }
 
 
