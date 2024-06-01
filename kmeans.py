@@ -33,13 +33,6 @@ n_clusters = 3  # Adjust as needed
 kmeans = KMeans(n_clusters=n_clusters)
 gdf['cluster'] = kmeans.fit_predict(gdf[['x', 'y']])
 
-# Plot the clusters using Matplotlib
-fig, ax = plt.subplots(figsize=(10, 10))
-gdf.plot(ax=ax, column='cluster', legend=True, cmap='tab20', markersize=5)
-plt.title('K-Means Clustering of Geospatial Data')
-plt.xlabel('Longitude')
-plt.ylabel('Latitude')
-plt.show()
 
 # Create a map using Folium
 map_clusters = folium.Map(location=[gdf['latitude'].mean(), gdf['longitude'].mean()], zoom_start=10)
