@@ -54,7 +54,6 @@ from sklearn.cluster import DBSCAN
 from sklearn.metrics.pairwise import haversine_distances
 from math import radians
 import folium
-import matplotlib.pyplot as plt
 
 data = pd.read_csv('new_januari.csv')
 
@@ -66,8 +65,8 @@ gdf['latitude_rad'] = gdf['latitude'].apply(radians)
 gdf['longitude_rad'] = gdf['longitude'].apply(radians)
 
 
-epsilon = 2 / 6371000  # Convert meters to radians by dividing by Earth radius
-min_samples = 1  # Adjust as needed
+epsilon = 5 / 6371000  # Convert meters to radians by dividing by Earth radius
+min_samples = 10  # Adjust as needed
 
 # Define haversine function to calculate distance
 def haversine(point1, point2):
@@ -81,14 +80,6 @@ def dbscan_clustering(data, epsilon, min_samples):
 
 # Perform clustering
 gdf['cluster'] = dbscan_clustering(gdf, epsilon, min_samples)
-
-# Plot the clusters using Matplotlib
-fig, ax = plt.subplots(figsize=(10, 10))
-gdf.plot(ax=ax, column='cluster', legend=True, cmap='tab20', markersize=5)
-plt.title('DBSCAN Clustering of Geospatial Data')
-plt.xlabel('Longitude')
-plt.ylabel('Latitude')
-plt.show()
 
 # Create a map using Folium
 map_clusters = folium.Map(location=[gdf['latitude'].mean(), gdf['longitude'].mean()], zoom_start=10)
