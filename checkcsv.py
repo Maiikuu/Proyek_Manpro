@@ -55,5 +55,5 @@ for _, row in gdf.iterrows():
     ).add_to(map_clusters)
 
 # Save and display the map
-map_clusters.save('penyakitkmean.html')
+map_clusters.save('new_februari.html')
 map_clusters  # This will display the map in Jupyter notebook environments

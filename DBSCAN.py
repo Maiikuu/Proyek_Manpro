@@ -55,7 +55,7 @@ from sklearn.metrics.pairwise import haversine_distances
 from math import radians
 import folium
 
-data = pd.read_csv('new_januari.csv')
+data = pd.read_csv('new_februari.csv')
 
 data.dropna(subset=['latitude', 'longitude'], inplace=True)
 
@@ -93,5 +93,5 @@ for _, row in gdf.iterrows():
         fill_color='blue' if row['cluster'] == -1 else 'red'
     ).add_to(map_clusters)
 
-map_clusters.save('map.html')
+map_clusters.save('mapfeb.html')
 # map_clusters

@@ -1,12 +1,11 @@
 import pandas as pd
 from geopy.geocoders import Nominatim
 
-# Initialize the geocoder
 geolocator = Nominatim(user_agent="geoapiExercises")
 
 # Read the CSV file, handle bad lines by skipping
 try:
-    df = pd.read_csv("penyakitutamajanuari.csv", sep=';')
+    df = pd.read_csv("februari.csv", sep=';')
 except pd.errors.ParserError as e:
     print(f"Error reading CSV: {e}")
 
@@ -25,4 +24,4 @@ def geocode_address(row):
 df = df.apply(geocode_address, axis=1)
 
 # Save the updated DataFrame to a new CSV file
-df.to_csv("new_januari.csv", index=False)
+df.to_csv("new_februari.csv", index=False)
