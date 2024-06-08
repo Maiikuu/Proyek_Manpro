@@ -6,18 +6,14 @@ from math import cos, sin, radians
 import folium
 import matplotlib.pyplot as plt
 
-# Load data from CSV
 data = pd.read_csv('new_januari.csv')
 
-# Drop rows with missing values
 data.dropna(subset=['latitude', 'longitude'], inplace=True)
 
-# Create a GeoDataFrame
 gdf = gpd.GeoDataFrame(data, geometry=gpd.points_from_xy(data.longitude, data.latitude))
 
-# Convert latitude and longitude to Cartesian coordinates
 def lat_lon_to_cartesian(lat, lon):
-    R = 6371000  # Earth radius in meters
+    R = 6371000
     lat_rad = radians(lat)
     lon_rad = radians(lon)
     x = R * cos(lat_rad) * cos(lon_rad)
@@ -29,12 +25,9 @@ gdf['x'], gdf['y'] = zip(*gdf.apply(lambda row: lat_lon_to_cartesian(row['latitu
 # Define the number of clusters for K-Means
 n_clusters = 3  # Adjust as needed
 
-# Perform K-Means clustering
 kmeans = KMeans(n_clusters=n_clusters)
 gdf['cluster'] = kmeans.fit_predict(gdf[['x', 'y']])
 
-
-# Create a map using Folium
 map_clusters = folium.Map(location=[gdf['latitude'].mean(), gdf['longitude'].mean()], zoom_start=10)
 
 # Add markers for each data point
