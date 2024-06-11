@@ -5,13 +5,14 @@ body{
     font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
 }
 
-header{
+header {
     background: white;
     padding: 40px;
     height: 30px;
     padding-left: 20px;
+    position: relative;
+    z-index: 9999; /* Atur nilai z-index yang lebih tinggi dari elemen lain */
 }
-
 header a{
     color: black;
     font-weight: bold;
@@ -262,5 +263,8 @@ th, td {
 .table {
     background-color: #f2f2f2;
 }
-
-
+.folium-map {
+    width: 100%; /* Sesuaikan dengan lebar yang diinginkan */
+    height: 900px; /* Sesuaikan dengan tinggi yang diinginkan */
+    margin: 0 auto; /* Untuk memusatkan peta */
+}
